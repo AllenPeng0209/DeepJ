@@ -22,7 +22,7 @@ NUM_ACTIONS = VEL_OFFSET + VEL_QUANTIZATION
 # Trainin Parameters
 BATCH_SIZE = 64
 SEQ_LEN = 1024 + 1
-GRADIENT_CLIP = 10
+GRADIENT_CLIP = 3
 # The number of train generator cycles per sequence
 TRAIN_CYCLES = 1000
 VAL_CYCLES = int(TRAIN_CYCLES * 0.05)

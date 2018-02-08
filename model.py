@@ -10,7 +10,7 @@ class DeepJ(nn.Module):
     """
     The DeepJ neural network model architecture.
     """
-    def __init__(self, num_units=512, num_layers=4, style_units=32):
+    def __init__(self, num_units=512, num_layers=3, style_units=32):
         super().__init__()
         self.num_units = num_units
         self.num_layers = num_layers
@@ -18,8 +18,9 @@ class DeepJ(nn.Module):
 
         # RNN
         self.rnns = [
-            nn.GRU(NUM_ACTIONS + style_units, num_units, 2, batch_first=True) if i == 0 else 
-            DilatedRNN(nn.GRU(num_units, num_units, batch_first=True), 2 ** i)
+            nn.LSTM(NUM_ACTIONS + style_units, num_units, batch_first=True) if i == 0 else 
+            DilatedRNN(nn.LSTM(num_units, num_units, batch_first=True), 2 ** i)
+            # nn.LSTM((NUM_ACTIONS + style_units) if i == 0 else num_units, num_units, batch_first=True)
             for i in range(num_layers)
         ]
 
@@ -47,11 +48,11 @@ class DeepJ(nn.Module):
             states = [None for _ in range(self.num_layers)]
 
         for l, rnn in enumerate(self.rnns):
-            prev_x = x
+            # prev_x = x
             x, states[l] = rnn(x, states[l])
 
-            if l > 0:
-                x = prev_x + x
+            # if l > 0:
+            #     x = prev_x + x
 
         x = self.output_linear(x)
         return x, states
